@@ -15,6 +15,7 @@ const Cart = () => {
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentOption, setPaymentOption] = useState("COD");
     const [paymentResult, setPaymentResult] = useState(null);
+    const API = import.meta.env.VITE_BACKEND_URL;
     
 
     const getAddresses = async () => {
@@ -111,7 +112,7 @@ const Cart = () => {
                             order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                             handler: async (response) => {
                                 try {
-                                    const res = await fetch("http://localhost:5800/api/payment/verification", {
+                                    const res = await fetch(`${API}/api/payment/verification`, {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
                                         credentials: "include",
