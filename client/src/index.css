@@ -1,0 +1,15 @@
+  @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap');
+  @import "tailwindcss";
+
+  *{
+    font-family: "Mozilla Headline", sans-serif;
+  }
+
+  @theme{
+    --color-primary: #094e89;  /* blue */
+    --color-primary-dull: #f28400;  /* orange */
+  }
+
+  .no-scrollbar::-webkit-scrollbar{
+    display: none;
+  }
