@@ -5,7 +5,8 @@ import Product from "../models/Product.js";
 // Place Order (COD) /api/order/cod
 const placeOrderCod = async (req, res) => {
     try {
-        const {userId, items, address} = req.body;
+        const {items, address} = req.body;
+        const userId = req.userId;
         if(!address || items.length === 0){
             return res.json({
                 success: false,
@@ -51,7 +52,8 @@ const placeOrderCod = async (req, res) => {
 // Place Order (COD) /api/order/online
 const placeOrderOnline = async (req, res) => {
     try {
-        const {userId, items, address} = req.body;
+        const {items, address} = req.body;
+        const userId = req.userId;
         if(!address || items.length === 0){
             return res.json({
                 success: false,

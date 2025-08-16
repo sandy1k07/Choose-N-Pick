@@ -66,7 +66,6 @@ const Cart = () => {
             if(paymentOption === 'COD'){
                 try {
                     const { data } = await axios.post('/api/order/cod', {
-                        userId: user._id,
                         items: cartArray.map((item) => ({
                             product: item._id,
                             quantity: item.quantity
@@ -88,7 +87,6 @@ const Cart = () => {
             }else{
                 try {
                     const { data } = await axios.post('/api/order/online', {
-                        userId: user._id,
                         items: cartArray.map((item) => ({
                             product: item._id,
                             quantity: item.quantity

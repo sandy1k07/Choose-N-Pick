@@ -36,10 +36,10 @@ const init = async () => {
 // Allowing what all origins are allowed to access the backend
 const allowedOrigins = ['http://localhost:5173', 'https://choose-n-pickfrontend.vercel.app'] 
 
+app.use(cors({origin: allowedOrigins, credentials: true}))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(cors({origin: allowedOrigins, credentials: true}))
 app.use('/api/user', userRouter)
 app.use('/api/seller', sellerRouter)
 app.use('/api/product', productRouter)
