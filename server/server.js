@@ -16,11 +16,22 @@ dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3007;
 
-await connectDb();
-await connectCloudinary();
+(async () => {
+  try {
+    await connectDb();
+    await connectCloudinary();
+
+    app.listen(PORT, () =>
+      console.log(`Server listening at PORT: ${PORT}`)
+    );
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  }
+})();
 
 // Allowing what all origins are allowed to access the backend
-const allowedOrigins = ['http://localhost:5173'] 
+const allowedOrigins = ['http://localhost:5173', 'https://choose-n-pickfrontend.vercel.app/'] 
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -39,5 +50,5 @@ export const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
-app.listen(PORT, ()=> console.log(`Server listening at PORT: ${PORT}`));
+// app.listen(PORT, ()=> console.log(`Server listening at PORT: ${PORT}`));
 
