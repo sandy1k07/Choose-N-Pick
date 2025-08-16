@@ -53,8 +53,12 @@ export const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello from Vercel backend!");
+});
+
 init();
 
-export default app;
+module.exports = app;
 // app.listen(PORT, ()=> console.log(`Server listening at PORT: ${PORT}`));
 
