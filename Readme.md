@@ -76,7 +76,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 cd server && npm start
 
 # Run frontend
-cd client && npm start
+cd client && npm run dev
 ```
 
 ---
