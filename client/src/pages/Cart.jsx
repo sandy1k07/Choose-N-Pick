@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const Cart = () => {
     const {cart, removeFromCart, products, currency, getCartCount, updateCartItem,
-        navigate, getCartAmount, user, setCart, deliveryFee, itemAmount, taxAmount, totalAmount
+        navigate, user, setCart, deliveryFee, itemAmount, taxAmount, totalAmount
     } = useAppContext();
 
     const [cartArray, setCartArray] = useState([]);
@@ -14,7 +14,6 @@ const Cart = () => {
     const [showAddress, setShowAddress] = React.useState(false)
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentOption, setPaymentOption] = useState("COD");
-    const [paymentResult, setPaymentResult] = useState(null);
     const API = import.meta.env.VITE_BACKEND_URL;
     
 
@@ -58,9 +57,28 @@ const Cart = () => {
     }, [user])
 
     const placeOrder = async () => {
+        
+        
         try {
             if(!selectedAddress){
                 return toast.error("No address selected")
+            }
+
+            const {data} = await axios.post('/api/cart/cartCheck', {cart});
+
+            if(data.success){
+                if(data.updated){
+                    toast.error("Few items are out of stock");
+                    setTimeout(() => {
+                        setCart(data.cart);
+                        toast.success("Cart has been updated");
+                        return;
+                    }, 1000);
+                    return;
+                }
+            }else{
+                toast.error(data.msg);
+                return;
             }
 
             // COD
@@ -177,7 +195,7 @@ const Cart = () => {
                                         <p>Qty:</p>
                                         <select onChange={(e) => updateCartItem(product._id, Number(e.target.value))} 
                                         value={product.quantity} className='outline-none'>
-                                            {Array(cart[product._id] > 9 ? cart[product_id] : 9).fill('').map((_, index) => (
+                                            {Array(cart[product._id] > 9 ? cart[product._id] : 9).fill('').map((_, index) => (
                                                 <option key={index} value={index + 1}>{index + 1}</option>
                                             ))}
                                         </select>
