@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
     },
     images: {
         type: Array,
-        required: true,
+        // required: true,
     },
     category: {
         type: String,
@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema({
     inStock: {
         type: Boolean,
         default: true,
+    },
+    stockCount: {
+        type: Number,
+        default: 0
     }
 }, {timestamps: true})
 

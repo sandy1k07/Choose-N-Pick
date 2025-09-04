@@ -1,7 +1,9 @@
 import Order from "../models/Orders.js";
+import Product from "../models/Product.js";
 import User from "../models/User.js";
 import { instance } from "../server.js"
 import crypto from "crypto";
+import mongoose from "mongoose";
 
 // checkout /api/payment/checkout
 const checkout = async (req, res) => {
@@ -38,15 +40,28 @@ const paymentVerification = async (req, res) => {
     .digest('hex');
     
     if(expectedSIgnature === razorpay_signature){
-        await Order.create({
-            ...orderData,
-            isPaid: true
-        })
+        try {
+            await Order.create({
+                ...orderData,
+                isPaid: true
+            })
+            // console.log(orderData.items);
 
-        return res.json({
-        success: true,
-        msg: "Payment verified and order placed successfully",
-    })} else{
+            for (let item of orderData.items) {
+                await Product.findByIdAndUpdate(item.product, { $inc: { stockCount: -item.quantity } });
+            }
+
+            return res.json({
+                success: true,
+                msg: "Payment verified and order placed successfully",
+            })
+        } catch (error) {
+            return res.json({
+            success: false,
+            msg: error.message
+        })
+        }    
+    } else{
         return res.json({
             success: false,
             msg: "Payment Not verified"

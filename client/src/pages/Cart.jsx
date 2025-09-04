@@ -87,9 +87,10 @@ const Cart = () => {
                     const { data } = await axios.post('/api/order/cod', {
                         items: cartArray.map((item) => ({
                             product: item._id,
-                            quantity: item.quantity
+                            quantity: item.quantity,
                         })),
-                        address: selectedAddress._id
+                        address: selectedAddress._id,
+                        amount: totalAmount,
                     })
 
                     if (data.success) {
@@ -110,7 +111,8 @@ const Cart = () => {
                             product: item._id,
                             quantity: item.quantity
                         })),
-                        address: selectedAddress._id
+                        address: selectedAddress._id,
+                        amount: totalAmount
                     })
 
                     if(data.success){
