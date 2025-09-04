@@ -5,7 +5,7 @@ import Product from "../models/Product.js";
 // Place Order (COD) /api/order/cod
 const placeOrderCod = async (req, res) => {
     try {
-        const {items, address} = req.body;
+        const {items, address, amount} = req.body;
         const userId = req.userId;
         if(!address || items.length === 0){
             return res.json({
@@ -14,20 +14,6 @@ const placeOrderCod = async (req, res) => {
             })
         }
 
-        // calculate amount of items
-        let amount = await items.reduce(async (acc, item) => {
-            const product = await Product.findById(item.product);
-            return (await acc) + product.offerPrice * item.quantity;
-        }, 0);
-
-        // const products = await Promise.all(items.map(i => Product.findById(i.product)));
-        // const amount = products.reduce((sum, product, idx) =>
-        //     sum + product.offerPrice * items[idx].quantity,
-        //     0);
-
-        // calculate tax (12% GST)
-        amount+= Math.floor(amount * 0.12);
-
         await Order.create({
             userId: userId,
             items: items,
@@ -35,6 +21,10 @@ const placeOrderCod = async (req, res) => {
             address: address,
             paymentType: "COD"
         })
+
+        for(let item of items){
+            await Product.findByIdAndUpdate(item.product, {$inc: {stockCount: -item.quantity}});
+        }
 
         return res.json({
             success: true,
@@ -52,7 +42,7 @@ const placeOrderCod = async (req, res) => {
 // Place Order (COD) /api/order/online
 const placeOrderOnline = async (req, res) => {
     try {
-        const {items, address} = req.body;
+        const {items, address, amount} = req.body;
         const userId = req.userId;
         if(!address || items.length === 0){
             return res.json({
@@ -61,20 +51,7 @@ const placeOrderOnline = async (req, res) => {
             })
         }
 
-        // calculate amount of items
-        let amount = await items.reduce(async (acc, item) => {
-            const product = await Product.findById(item.product);
-            return (await acc) + product.offerPrice * item.quantity;
-        }, 0);
-
-        // const products = await Promise.all(items.map(i => Product.findById(i.product)));
-        // const amount = products.reduce((sum, product, idx) =>
-        //     sum + product.offerPrice * items[idx].quantity,
-        //     0);
-
-        // calculate tax (12% GST)
-        amount+= Math.floor(amount * 0.12);
-
+        
         const order = {
             userId: userId,
             items: items,

@@ -92,7 +92,7 @@ const ProductDetails = () => {
                 </div>
                 <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6
                 lg:grid-cols-5 mt-6 w-full'>
-                    {relatedProducts.filter((item) => item.inStock).map((product, index) => (
+                    {relatedProducts.filter((item) => item.stockCount>0).map((product, index) => (
                         <ProductCard key={index} product={product}/>
                     ))}
                 </div>

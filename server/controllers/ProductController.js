@@ -18,6 +18,7 @@ const addProduct = async (req, res) => {
                 return result.secure_url;
             })
         )
+        
 
         await Product.create({
             ...productData,
@@ -79,8 +80,8 @@ const productById = async (req, res) => {
 
 const updateStockById = async (req, res) => {
     try {
-        const {prodId, inStock} = req.body;
-        await Product.findByIdAndUpdate(prodId, {inStock: inStock}) 
+        const {prodId, stockCount} = req.body;
+        await Product.findByIdAndUpdate(prodId, {stockCount: stockCount}) 
         res.json({
             success: true,
             msg: "Product stock updated"
