@@ -18,7 +18,7 @@ The application supports customer shopping flows, secure authentication, payment
 
 ### 🛠️ Admin Features
 - Add new products with images and details (stored in **Cloudinary**)  
-- View and manage all products with stock toggle (In Stock / Out of Stock)  
+- View and manage all products with stock count manage feature 
 - Monitor all orders and payment statuses  
 
 ---
