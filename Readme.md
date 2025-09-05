@@ -37,9 +37,24 @@ The application supports customer shopping flows, secure authentication, payment
 
 ## 📂 Project Structure
 ```
-/client   → React frontend  
-/server   → Express + Node.js backend  
-/models   → Mongoose schemas (User, Product, Order, etc.)  
+choose-n-pick/
+├── client/ # Frontend (React)
+│ ├── assets/ # Static assets (images, icons, etc.)
+│ ├── components/ # Reusable React components
+│ ├── context/ # Global context providers (state management)
+│ ├── pages/ # Page-level React components
+│ ├── App.jsx # Root React component
+│ ├── index.html # Main HTML template
+│ └── .env # Frontend environment variables
+│
+├── server/ # Backend (Node.js + Express + MongoDB)
+│ ├── configs/ # Database connection, environment config
+│ ├── controllers/ # Logic for routes
+│ ├── middlewares/ # Custom Express middlewares (auth, orderPublish etc.)
+│ ├── models/ # Mongoose schemas and models
+│ ├── routes/ # API route definitions
+│ ├── server.js # Entry point for the backend server
+│ └── .env # Backend environment variables 
 ```
 
 ---
