@@ -64,10 +64,12 @@ const checkCart = async (req, res) => {
         
         for (let productId in cart) {
             const product = productMap.get(productId);
-            if (product.stockCount>0) {
+            if (product.stockCount>=cart[productId]) {
                 updatedCart[productId] = cart[productId];
             }else{
                 isUpdated = true;
+                if(!product.stockCount) continue;
+                updatedCart[productId] = product.stockCount;
             }
         }
         

@@ -35,7 +35,7 @@ const App = () => {
       <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
         <Routes>
           <Route path='/' element={<Home />}/>
-          <Route path='/allproducts' element={<AllProducts />}/>
+          <Route path='/allproducts' element={<AllProducts/>}/>
           <Route path='/allproducts/:category' element={<ProductCategory />}/>
           <Route path='/allProducts/:category/:id' element={<ProductDetails />} />
           <Route path='/cart' element={<Cart />}/>
@@ -43,8 +43,8 @@ const App = () => {
           <Route path='/my-orders' element={<MyOrders />} />
           <Route path='/seller' element={seller ? <SellerLayout /> : <SellerLogin />} >
             <Route index element={seller ? <AddProducts /> : null} />
-            <Route path='product-list' element={<ProductList />} />
-            <Route path='orders' element={<Orders />} />
+            <Route path='product-list' element={<ProductList key={location.pathname}/>} />
+            <Route path='orders' element={<Orders key={location.pathname} />} />
           </Route>
         </Routes>
       </div>
