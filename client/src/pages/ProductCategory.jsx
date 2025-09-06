@@ -7,16 +7,11 @@ import ProductCard from '../components/ProductCard';
 const ProductCategory = () => {
    const {products} = useAppContext();
    const {category} =  useParams();
-   console.log(category);
    
 
    const searchCategory = categories.find((cat)=> cat.path.toLowerCase() === category)
    const filteredProducts = products.filter(product => product.category.toLowerCase() === category);
-   console.log(`${filteredProducts.length} lelo bhai length`);
 
-    // React.useEffect(() => {
-    //     console.log("Current URL:", window.location.href);
-    // }, []);
 
   return (
     <div className='mt-16'>
@@ -36,7 +31,6 @@ const ProductCategory = () => {
             </div>
         ): (
              <div className='flex items-center justify-center h-[60vh]'>
-                {console.log("DIV RETURNED")}
                 <p className='text-2xl font-medium text-primary'>No products found for the asked category</p>
             </div>
         )}

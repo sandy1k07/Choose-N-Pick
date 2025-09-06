@@ -42,7 +42,7 @@ const addProduct = async (req, res) => {
 
 const productList = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Product.find({stockCount: {$gt: 0}});
         res.json({
             success: true,
             products
@@ -52,6 +52,23 @@ const productList = async (req, res) => {
         return res.json({
             success: false,
             msg: error.message,
+        })
+    }
+}
+
+// Get products for seller without stock filter /api/product/seller
+
+const productSeller = async (req, res) => {
+    try {
+        const products = await Product.find({});
+        return res.json({
+            success: true, 
+            products,
+        })
+    } catch (error) {
+        return res.json({
+            success: false,
+            msg: error.message
         })
     }
 }
@@ -94,4 +111,4 @@ const updateStockById = async (req, res) => {
         })
     }
 }
-export {addProduct, productList, productById, updateStockById};
+export {addProduct, productList, productById, updateStockById, productSeller};

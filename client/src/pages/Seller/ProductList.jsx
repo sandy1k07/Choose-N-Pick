@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAppContext } from '../../context/appContext'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useEffect } from 'react'
 
 const ProductList = () => {
   const { products, currency, fetchProducts } = useAppContext()
@@ -9,12 +10,32 @@ const ProductList = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [newStock, setNewStock] = useState("")
+  const [sellerProducts, setSellerProducts] = useState([]);
+
+  const fetchAllProducts = async () => {
+    try {
+      const {data} = await axios.get('/api/product/seller');
+      if(data.success){
+        setSellerProducts(data.products);
+      }else{
+        toast.error(data.msg);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [])
 
   const stockUpdate = async (prodId, stockCount) => {
     try {
       const { data } = await axios.post('/api/product/stock', { prodId, stockCount })
       if (data.success) {
-        fetchProducts()
+        fetchAllProducts();
+        fetchProducts();
+        
         toast.success(data.msg)
         setShowPopup(false)
       } else {
@@ -47,7 +68,7 @@ const ProductList = () => {
               </tr>
             </thead>
             <tbody className="text-sm text-gray-500">
-              {products.map((product) => (
+              {sellerProducts.map((product) => (
                 <tr key={product._id} className="border-t border-gray-500/20">
                   <td className="md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3 truncate">
                     <div className="border border-gray-300 rounded overflow-hidden">
