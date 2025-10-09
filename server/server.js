@@ -12,6 +12,7 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import paymentRouter from './routes/paymentRoute.js';
+import couponRouter from './routes/couponRoute.js';
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3007;
@@ -47,6 +48,7 @@ app.use('/api/cart', cartRouter)
 app.use('/api/address', addressRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/payment', paymentRouter)
+app.use('/api/coupon', couponRouter)
 
 export const instance = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,

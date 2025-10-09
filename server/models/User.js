@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema({
     cart: {
         type: Object,
         default: {},
-    } 
+    },
+    couponsApplied: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'coupon'
+    }]
 }, {minimize: false})
 
 // Without { minimize: false } (default is true)
