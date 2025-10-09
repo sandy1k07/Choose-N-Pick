@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/appContext'
 import { assets } from '../assets/assets';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from 'axios';  
 
 const Cart = () => {
     const {cart, removeFromCart, products, currency, getCartCount, updateCartItem,
-        navigate, user, setCart, deliveryFee, itemAmount, taxAmount, totalAmount
+        navigate, user, setCart, deliveryFee, itemAmount, taxAmount, totalAmount, setTotalAmount, 
+        setItemAmount
     } = useAppContext();
 
     const [cartArray, setCartArray] = useState([]);
@@ -14,6 +15,10 @@ const Cart = () => {
     const [showAddress, setShowAddress] = React.useState(false)
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentOption, setPaymentOption] = useState("COD");
+    const [coupon, setCoupon] = useState("");
+    const [couponApplied, setCouponApplied] = useState(false);
+    const [itemAmountCopy, setItemAmountCopy] = useState(itemAmount);
+    const [totalCopy, setTotalCopy] = useState(totalAmount);
     const API = import.meta.env.VITE_BACKEND_URL;
     
 
@@ -41,6 +46,42 @@ const Cart = () => {
             tempArray.push(product);
         }
         setCartArray(tempArray);
+    }
+
+    const couponApply = async (event) => {
+        event.preventDefault();
+        try {
+            if(!coupon.length){
+                toast.error("Enter a coupon first");
+                return;
+            }
+
+            const {data} = await axios.post("/api/coupon/applyCoupon", {
+                coupon, itemAmount
+            })
+            
+            if(data.success){
+                setTotalCopy(totalAmount);
+                setItemAmountCopy(itemAmount);
+                setCouponApplied(true);
+                setItemAmount(data.itemAmount);
+                toast.success("Coupon applied successfully")
+            }else{
+                toast.error(data.msg);
+            }
+            
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const removeCoupon = async (event) => {
+        event.preventDefault();
+        toast.success("Coupon removed");
+        setCoupon("");
+        setCouponApplied(false);
+        setItemAmount(itemAmountCopy);
+        setTotalAmount(totalCopy);
     }
 
     useEffect(()=>{
@@ -91,6 +132,7 @@ const Cart = () => {
                         })),
                         address: selectedAddress._id,
                         amount: totalAmount,
+                        coupon,
                     })
 
                     if (data.success) {
@@ -246,12 +288,24 @@ const Cart = () => {
                         )}
                     </div>
 
-                    <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
+                    <p className="text-sm font-medium mt-6">PAYMENT METHOD</p>
 
                     <select onClick={(e) => setPaymentOption(e.target.value)} className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none">
                         <option value="COD">Cash On Delivery</option>
                         <option value="Online">Online Payment</option>
                     </select>
+                    <form onSubmit={couponApplied ? removeCoupon : couponApply} className='mt-2 text-sm font-medium'>
+                        <label>COUPON</label>
+                        <div className='flex flex-row gap-2 mt-1 items-center px-2 bg-white border border-gray-300'>
+                            <input onChange={(e) => setCoupon(e.target.value)} value={coupon} 
+                            placeholder='Have a coupon to apply?' className = 'w-full h-10 bg-none px-3 py-2 outline-none' minLength={10} maxLength={15} type='text'/>
+                            {!couponApplied ? 
+                                <button className='w-30 h-7 rounded-sm font-sm cursor-pointer bg-primary outline-none text-white hover:bg-primary-dull transition' type='submit'>APPLY</button>
+                                :
+                                <button className='w-30 h-7 rounded-sm font-sm cursor-pointer bg-primary outline-none text-white hover:bg-primary-dull transition' type='submit'>REMOVE</button>
+                            }
+                        </div>
+                    </form>
                 </div>
 
                 <hr className="border-gray-300" />
@@ -269,7 +323,17 @@ const Cart = () => {
                         <span>GST (12%)</span><span>{currency} {taxAmount}</span>
                     </p>
                     <p className="flex justify-between text-lg font-medium mt-3">
-                        <span>Total Amount:</span><span>{currency} {totalAmount}</span>
+                        <span>Total Amount:</span>
+                        {!couponApplied ?
+                            <span >{currency} {totalAmount}</span>
+                            :
+                            <span className='gap-2'>
+                                <span>{currency} </span>
+                                <span className='line-through text-red-400'>{totalCopy}</span>
+                                <span className=''> {totalAmount}</span>
+                            </span>
+                        }
+
                     </p>
                 </div>
 

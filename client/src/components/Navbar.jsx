@@ -4,9 +4,10 @@ import { assets } from '../assets/assets';
 import { useAppContext } from '../context/appContext';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useState } from 'react';
 
 const Navbar = () => {
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = useState(false)
     
     const { user, setUser, setUserLoginPage, navigate, cart, search, setSearch, 
         getCartCount

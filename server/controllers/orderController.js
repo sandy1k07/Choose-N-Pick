@@ -1,11 +1,13 @@
+import Coupon from "../models/Coupon.js";
 import Order from "../models/Orders.js";
 import Product from "../models/Product.js";
+import User from "../models/User.js";
 
 
 // Place Order (COD) /api/order/cod
 const placeOrderCod = async (req, res) => {
     try {
-        const {items, address, amount} = req.body;
+        const {items, address, amount, coupon} = req.body;
         const userId = req.userId;
         if(!address || items.length === 0){
             return res.json({
@@ -24,6 +26,13 @@ const placeOrderCod = async (req, res) => {
 
         for(let item of items){
             await Product.findByIdAndUpdate(item.product, {$inc: {stockCount: -item.quantity}});
+        }
+
+        if(coupon){
+            const appliedCoupon = await Coupon.findOne({couponId: coupon});
+            await User.findByIdAndUpdate(userId, {
+                $push: {couponsApplied: appliedCoupon._id}
+            })
         }
 
         return res.json({
